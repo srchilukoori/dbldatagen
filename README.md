@@ -56,6 +56,8 @@ The release binaries can be accessed at:
 To use download a wheel file and install using the Databricks install mechanism to install a wheel based
 library into your workspace.
 
+Latest release is fully functional but fails 3 unit tests relating to date ranges.
+
 # Building the code
 
 Our recommended mechanism for building the code is to use a conda based development process. 
