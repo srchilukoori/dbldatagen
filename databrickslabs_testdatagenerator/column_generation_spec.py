@@ -949,6 +949,12 @@ class ColumnGenerationSpec(object):
         return new_def
 
     def applyTextFormatExpression(self, new_def, sformat):
+        '''
+        Applies text formating expression to Spark SQL expression generation clayse
+        :param new_def: existing Spark SQL data generation expression
+        :param sformat: format to apply
+        :return: Spark SQL data generation expression with formatting applied
+        '''
         # note :
         # while it seems like this could use a shared instance, this does not work if initialized
         # in a class method
@@ -957,6 +963,13 @@ class ColumnGenerationSpec(object):
         return new_def
 
     def applyPrefixSuffixExpressions(self, cprefix, csuffix, new_def):
+        '''
+        Applies prefix and suffix expressions to generated data
+        :param cprefix: Prefix string to apply. May be `None`
+        :param csuffix: Suffix string to apply. May be `None`
+        :param new_def: Spark SQL expression before application of prefixes and suffixes
+        :return: new spark sql expression that includes application of suffix and prefix strings
+        '''
         # string value generation is simply handled by combining with a suffix or prefix
         # TODO: prefix and suffix only apply to base columns that are numeric types
         text_separator = self.text_separator if self.text_separator is not None else '_'

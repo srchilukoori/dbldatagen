@@ -17,4 +17,5 @@ See the contents of the file `python/require.txt` to see the Python package depe
 * Added support for scripting of table create statements
 * Resolved many PEP8 style issues
 * Resolved / triaged prospector / pylint issues
+* Uses sphinx `Read the docs` theme for generated docs
  

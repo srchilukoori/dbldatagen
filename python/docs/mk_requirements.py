@@ -1,5 +1,7 @@
 import sys
 
+''' Utility to turn requirements text document into Sphinx rst format copy'''
+
 print("""Building Requirements markdown document""")
 print("args", str(sys.argv))
 
@@ -17,3 +19,5 @@ with open(sys.argv[1]) as reader:
             elif not len(line) == 0:
                 line = "* " + line
             writer.write(line + "\n")
+    print("Finished copying file to markup")
+

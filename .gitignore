@@ -29,6 +29,7 @@ project/target/
 build_env/
 python/docs/source/relnotes/*.md
 python/docs/source/reference/api/*.rst
+python/docs/source/relnotes/*.txt
 
 # code coverage related
 .coverage

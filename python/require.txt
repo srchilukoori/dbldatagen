@@ -1,4 +1,4 @@
-# The following packages are used in building the test data generator framework
+# The following packages are used in building the test data generator framework.
 # All packages used are already installed in the Databricks runtime environment for version 6.5 or later
 numpy==1.18.1
 pandas==1.0.1
