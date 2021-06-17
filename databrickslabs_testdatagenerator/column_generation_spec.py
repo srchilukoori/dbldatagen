@@ -4,6 +4,9 @@
 
 """
 This file defines the `ColumnGenerationSpec` class
+
+ :py:module:: databrickslabs_testdatagenerator
+
 """
 
 from datetime import datetime, timedelta
@@ -375,11 +378,11 @@ class ColumnGenerationSpec(object):
         assert colType is not None, "`colType` must be non-None instance"
 
         if type(colType) is DateType or type(colType) is TimestampType:
-            return self.computeAdjustedDateTimeRangeForColumn(colType, c_begin, c_end, c_interval, c_range, c_unique)
+            return self._computeAdjustedDateTimeRangeForColumn(colType, c_begin, c_end, c_interval, c_range, c_unique)
         else:
-            return self.computeAdjustedNumericRangeForColumn(colType, c_min, c_max, c_step, c_range, c_unique)
+            return self._computeAdjustedNumericRangeForColumn(colType, c_min, c_max, c_step, c_range, c_unique)
 
-    def computeAdjustedNumericRangeForColumn(self, colType, c_min, c_max, c_step, c_range, c_unique):
+    def _computeAdjustedNumericRangeForColumn(self, colType, c_min, c_max, c_step, c_range, c_unique):
         """Determine adjusted range for data column
 
         Rules:
@@ -428,7 +431,7 @@ class ColumnGenerationSpec(object):
 
         return result
 
-    def computeAdjustedDateTimeRangeForColumn(self, colType, c_begin, c_end, c_interval, c_range, c_unique):
+    def _computeAdjustedDateTimeRangeForColumn(self, colType, c_begin, c_end, c_interval, c_range, c_unique):
         """Determine adjusted range for Date or Timestamp data column
         """
         effective_begin, effective_end, effective_interval = None, None, None
@@ -739,7 +742,7 @@ class ColumnGenerationSpec(object):
         else:
             return " |-- building column generator for column {}".format(self.name)
 
-    def makeWeightedColumnValuesExpression(self, values, weights, seed_column_name):
+    def _makeWeightedColumnValuesExpression(self, values, weights, seed_column_name):
         """make SQL expression to compute the weighted values expression
 
         :returns: Spark SQL expr
@@ -892,7 +895,7 @@ class ColumnGenerationSpec(object):
         # handle weighted values for weighted value columns
         # a weighted values column will use a base value denoted by `self.weighted_base_column`
         if self.isWeightedValuesColumn:
-            new_def = self.makeWeightedColumnValuesExpression(self.values, self.weights, self.weighted_base_column)
+            new_def = self._makeWeightedColumnValuesExpression(self.values, self.weights, self.weighted_base_column)
 
             if type(self.datatype) is StringType and self.text_generator is not None:
                 self.logger.warning("Template generation / text generation not supported for weighted columns")

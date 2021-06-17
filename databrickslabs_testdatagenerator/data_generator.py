@@ -198,7 +198,7 @@ class DataGenerator:
             self.logger = old_logger  # pylint: disable=attribute-defined-outside-init
         return new_copy
 
-    def markForPlanRegen(self):
+    def _markForPlanRegen(self):
         """Mark that build plan needs to be regenerated
 
         :returns: modified in-place instance of test data generator allowing for chaining of calls following
@@ -279,7 +279,7 @@ class DataGenerator:
                   following Builder pattern
         """
         self.columnSpecsByName[ColumnGenerationSpec.SEED_COLUMN].omit = False
-        self.markForPlanRegen()
+        self._markForPlanRegen()
 
         return self
 
@@ -293,7 +293,7 @@ class DataGenerator:
         """
         ensure(option_key in self._allowed_keys)
         self._options[option_key] = option_value
-        self.markForPlanRegen()
+        self._markForPlanRegen()
         return self
 
     def options(self, **kwargs):
@@ -306,7 +306,7 @@ class DataGenerator:
         """
         for key, value in kwargs.items():
             self.option(key, value)
-        self.markForPlanRegen()
+        self._markForPlanRegen()
         return self
 
     def _processOptions(self):
@@ -393,7 +393,7 @@ class DataGenerator:
         ct = self.columnSpecsByName[colName].datatype
         return ct if ct is not None else IntegerType()
 
-    def isFieldExplicitlyDefined(self, colName):
+    def _isFieldExplicitlyDefined(self, colName):
         """ return True if column generation spec has been explicitly defined for column, else false
 
         .. note::
@@ -542,7 +542,7 @@ class DataGenerator:
         ensure(colName in self.getInferredColumnNames(), " column `{0}` must refer to defined column".format(colName))
         if base_column is not None:
             self._checkColumnOrColumnList(base_column)
-        ensure(not self.isFieldExplicitlyDefined(colName), "duplicate column spec for column `{0}`".format(colName))
+        ensure(not self._isFieldExplicitlyDefined(colName), "duplicate column spec for column `{0}`".format(colName))
 
         # handle migration of old `min` and `max` options
         if OLD_MIN_OPTION in kwargs.keys():
@@ -563,11 +563,11 @@ class DataGenerator:
         self.logger.info("adding column spec - `%s` with baseColumn : `%s`, implicit : %s , omit %s",
                              colName, base_column, implicit, omit)
 
-        self.generateColumnDefinition(colName, self.getColumnType(colName), minValue=minValue, maxValue=maxValue,
-                                      step=step, prefix=prefix,
-                                      random=random, data_range=data_range,
-                                      distribution=distribution, base_column=base_column,
-                                      implicit=implicit, omit=omit, **new_props)
+        self._generateColumnDefinition(colName, self.getColumnType(colName), minValue=minValue, maxValue=maxValue,
+                                       step=step, prefix=prefix,
+                                       random=random, data_range=data_range,
+                                       distribution=distribution, base_column=base_column,
+                                       implicit=implicit, omit=omit, **new_props)
         return self
 
     def hasColumnSpec(self, colName):
@@ -620,15 +620,15 @@ class DataGenerator:
         self.logger.info("effective range: %s, %s, %s args: %s", minValue, maxValue, step, kwargs)
         self.logger.info("adding column - `%s` with baseColumn : `%s`, implicit : %s , omit %s",
                          colName, base_column, implicit, omit)
-        self.generateColumnDefinition(colName, colType, minValue=minValue, maxValue=maxValue,
-                                      step=step, prefix=prefix, random=random,
-                                      distribution=distribution, base_column=base_column, data_range=data_range,
-                                      implicit=implicit, omit=omit, **new_props)
+        self._generateColumnDefinition(colName, colType, minValue=minValue, maxValue=maxValue,
+                                       step=step, prefix=prefix, random=random,
+                                       distribution=distribution, base_column=base_column, data_range=data_range,
+                                       implicit=implicit, omit=omit, **new_props)
         self.inferredSchemaFields.append(StructField(colName, colType, nullable))
         return self
 
-    def generateColumnDefinition(self, colName, colType=None, base_column=None,
-                                 implicit=False, omit=False, nullable=True, **kwargs):
+    def _generateColumnDefinition(self, colName, colType=None, base_column=None,
+                                  implicit=False, omit=False, nullable=True, **kwargs):
         """ generate field definition and column spec
 
         .. note:: Any time that a new column definition is added,
@@ -662,11 +662,11 @@ class DataGenerator:
         self.allColumnSpecs.append(column_spec)
 
         # mark that the build plan needs to be regenerated
-        self.markForPlanRegen()
+        self._markForPlanRegen()
 
         return self
 
-    def getBaseDataFrame(self, start_id=0, streaming=False, options=None):
+    def _getBaseDataFrame(self, start_id=0, streaming=False, options=None):
         """ generate the base data frame and seed column (which defaults to `id`) , partitioning the data if necessary
 
         This is used when generating the test data.
@@ -718,7 +718,7 @@ class DataGenerator:
 
         return df1
 
-    def computeColumnBuildOrder(self):
+    def _computeColumnBuildOrder(self):
         """ compute the build ordering using a topological sort on dependencies
 
         In order to avoid references to columns that have not yet been generated, the test data generation process
@@ -793,7 +793,7 @@ class DataGenerator:
             base_column_datatypes = self.getColumnDataTypes(cs.baseColumns)
             cs.setBaseColumnDatatypes(base_column_datatypes)
 
-        self.computeColumnBuildOrder()
+        self._computeColumnBuildOrder()
 
         for x1 in self._build_order:
             for x in x1:
@@ -831,7 +831,7 @@ class DataGenerator:
                 | - use withIdOutput() to output base seed column
                """)
 
-        df1 = self.getBaseDataFrame(self.starting_id, streaming=withStreaming, options=options)
+        df1 = self._getBaseDataFrame(self.starting_id, streaming=withStreaming, options=options)
 
         if self.use_pandas:
             self.execution_history.append("Using Pandas Optimizations {}".format(self.use_pandas))

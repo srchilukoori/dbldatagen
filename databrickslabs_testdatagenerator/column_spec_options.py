@@ -5,6 +5,7 @@
 """
 .. title::Column Spec Options
 This file defines the `ColumnSpecOptions` class
+
 """
 
 from .utils import ensure
@@ -137,6 +138,7 @@ class ColumnSpecOptions(object):
         :param name: name of value to use in any reported errors or exceptions
         :param optional: If True (default), indicates that value is optional and
                          that `None` is a valid value for the option
+
         """
         assert name is not None, "`name` must be specified"
         if optional:

@@ -28,6 +28,8 @@ to Scala or R based Spark applications also.
    :maxdepth: 1
    :caption: API
 
+   Quick index <relnotes/quickindex>
+   Classes <./myclasses>
    API Documentation <reference/api/modules>
 
 .. toctree::

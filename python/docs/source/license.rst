@@ -3,7 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-To be added
-=================================
+License
+=======
 
-To be added
+The use of the Test Data Generator is covered by the following license:
+
+----
+
+.. literalinclude:: relnotes/LICENSE.txt
+
