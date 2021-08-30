@@ -22,7 +22,6 @@ schema = StructType([
 # build spark session
 
 # global spark
-
 spark = SparkSession.builder \
     .master("local[4]") \
     .appName("Word Count") \

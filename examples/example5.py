@@ -28,14 +28,15 @@ schema = dg.SchemaParser.parseCreateTable(spark, """
 x3 = (dg.DataGenerator(sparkSession=spark, name="association_oss_cell_info", rows=1000000, partitions=20)
       .withSchema(schema)
       # withColumnSpec adds specification for existing column
-      .withColumnSpec("site_id", minValue=1, maxValue=20, step=1)
+      .withColumnSpec("site_id", dataRange=range(1, 10))
       # base column specifies dependent column
       .withIdOutput()
       .withColumnSpec("site_cd", prefix='site', baseColumn='site_id')
-      .withColumn("sector_status_desc", "string", minValue=1, maxValue=200, step=1, prefix='status', random=True)
+      .withColumn("sector_status_desc", "string", dataRange=range(1, 5), prefix='status', random=True)
       # withColumn adds specification for new column
       .withColumn("rand", "float", expr="floor(rand() * 350) * (86400 + 3600)")
-      .withColumn("last_sync_dt", "timestamp", begin=start, end=end, interval=interval, random=True)
+      .withColumn("last_sync_dt", "timestamp", dataRange=dg.DateRange(start, end, timedelta(days=1, hours=1)),
+                  random=True)
       .withColumnSpec("sector_technology_desc", values=["GSM", "UMTS", "LTE", "UNKNOWN"], random=True)
       .withColumn("test_cell_flg", "int", values=[0, 1], random=True)
       )

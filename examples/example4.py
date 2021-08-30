@@ -1,7 +1,6 @@
 from datetime import timedelta, datetime
 
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType
 
 import dbldatagen as dg
 
@@ -9,20 +8,21 @@ interval = timedelta(days=1, hours=1)
 start = datetime(2017, 10, 1, 0, 0, 0)
 end = datetime(2018, 10, 1, 6, 0, 0)
 
-schema = StructType([
-    StructField("site_id", IntegerType(), True),
-    StructField("site_cd", StringType(), True),
-    StructField("c", StringType(), True),
-    StructField("c1", StringType(), True),
-    StructField("sector_technology_desc", StringType(), True),
-
-])
-
+# build spark session
 spark = SparkSession.builder \
     .master("local[4]") \
     .appName("Word Count") \
     .config("spark.some.config.option", "some-value") \
     .getOrCreate()
+
+schema = dg.SchemaParser.parseCreateTable(spark, """
+    create table Test1 (
+    site_id int ,
+    site_cd string ,
+    c string ,
+    c1 string ,
+    sector_technology_desc string )
+""")
 
 # will have implied column `id` for ordinal of row
 x3 = (dg.DataGenerator(sparkSession=spark, name="association_oss_cell_info", rows=1000000, partitions=20)
